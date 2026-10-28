@@ -106,7 +106,9 @@ def test_h5_linear_system_breaks_where_stated_as_bands():
     rows = {r["n"]: r for r in X.e7_rows()}
     assert 3e-10 < rows[30]["deviation"] < 3e-8 and 5e-8 < rows[40]["deviation"] < 5e-6 and 1e-5 < rows[50]["deviation"] < 1e-3 and 6e-3 < rows[60]["deviation"] < 6e-2
     assert rows[70]["deviation"] > 0.5 and rows[70]["negative"] is True
-    assert rows[70]["log_time"] == pytest.approx(5.6e16, rel=0.01) and rows[70]["linear"] == pytest.approx(-7.0e15, rel=0.5)
+    # Der Logarithmus ist plattformunabhängig; der Wert des linearen Systems nicht (Windows −7,0·10^15, Linux der CI −1,4·10^16): Vorzeichen und Größenordnung.
+    assert rows[70]["log_time"] == pytest.approx(5.6e16, rel=0.01)
+    assert rows[70]["linear"] < 0 and 1e15 < abs(rows[70]["linear"]) < 1e17
 
 
 def test_h5_function_refuses_beyond_forty():
